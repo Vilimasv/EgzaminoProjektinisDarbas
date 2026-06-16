@@ -5,7 +5,6 @@
 #include <algorithm>
 
 using namespace std;
-
 // -------------------------
 //   ŽAIDĖJO STRUKTŪRA
 // -------------------------
