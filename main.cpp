@@ -1,38 +1,42 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <sstream>
-#include <algorithm>
+#include <iostream>     // Ivestis ir isvestis (cout, cin)
+#include <fstream>      // Darbas su failais (ifstream, ofstream)
+#include <vector>       // Dinaminis masyvas zaidejams saugoti
+#include <sstream>      // Teksto skaidymas (stringstream)
+#include <algorithm>    // Rikiavimas, max_element
 
 using namespace std;
-// -------------------------
-//   ŽAIDĖJO STRUKTŪRA
-// -------------------------
+
+// ---------------------------------------------------------
+//  ZAIDEJO STRUKTURA
+//  Saugo visus duomenis apie viena zaideja.
+// ---------------------------------------------------------
 struct Player {
-    int id;
-    string name;
-    string team;
-    int games;
-    int points;
-    int rebounds;
-    int assists;
+    int id;         // Unikalus zaidejo ID
+    string name;    // Vardas ir pavarde
+    string team;    // Komanda
+    int games;      // Suzaistu rungtyniu skaicius
+    int points;     // Pelnyti taskai
+    int rebounds;   // Atkovoti kamuoliai
+    int assists;    // Rezultatyvus perdavimai
 };
 
-// -------------------------
-//   FAILO NUSKAITYMAS
-// -------------------------
+// ---------------------------------------------------------
+//  FAILO NUSKAITYMAS
+//  Perskaito visus zaidejus is data.txt ir sudeda i vector<Player>
+// ---------------------------------------------------------
 void loadFromFile(vector<Player>& players) {
-    ifstream fin("data.txt");
-    if (!fin.is_open()) {
+    ifstream fin("data.txt"); // Atidarome faila skaitymui
+    if (!fin.is_open()) {     // Tikriname, ar failas atsidare
         cout << "Nepavyko atidaryti failo data.txt\n";
         return;
     }
 
-    players.clear();
+    players.clear();          // Isvalome sena sarasa
     string line;
 
+    // Skaitome faila eilute po eilutes
     while (getline(fin, line)) {
-        stringstream ss(line);
+        stringstream ss(line); // Skaidome eilute pagal ';'
         Player p;
         string temp;
 
@@ -44,17 +48,18 @@ void loadFromFile(vector<Player>& players) {
         getline(ss, temp, ';'); p.rebounds = stoi(temp);
         getline(ss, temp, ';'); p.assists = stoi(temp);
 
-        players.push_back(p);
+        players.push_back(p); // Pridedame i sarasa
     }
 
     fin.close();
 }
 
-// -------------------------
-//   FAILO IŠSAUGOJIMAS
-// -------------------------
+// ---------------------------------------------------------
+//  FAILO ISSAUGOJIMAS
+//  Peraso visa data.txt faila su naujais duomenimis
+// ---------------------------------------------------------
 void saveToFile(const vector<Player>& players) {
-    ofstream fout("data.txt");
+    ofstream fout("data.txt"); // Atidarome faila rasymui
 
     for (const auto& p : players) {
         fout << p.id << ";"
@@ -69,9 +74,9 @@ void saveToFile(const vector<Player>& players) {
     fout.close();
 }
 
-// -------------------------
-//   SPAUSDINIMAS
-// -------------------------
+// ---------------------------------------------------------
+//  VIENO ZAIDEJO SPAUSDINIMAS
+// ---------------------------------------------------------
 void printPlayer(const Player& p) {
     cout << "ID: " << p.id << "\n"
          << "Vardas: " << p.name << "\n"
@@ -83,44 +88,48 @@ void printPlayer(const Player& p) {
          << "-------------------------\n";
 }
 
+// ---------------------------------------------------------
+//  VISU ZAIDEJU SPAUSDINIMAS
+// ---------------------------------------------------------
 void printAll(const vector<Player>& players) {
     for (const auto& p : players) {
         printPlayer(p);
     }
 }
 
-// -------------------------
-//   PAIEŠKA PAGAL ID
-// -------------------------
+// ---------------------------------------------------------
+//  PAIESKA PAGAL ID
+// ---------------------------------------------------------
 int findById(const vector<Player>& players, int id) {
     for (int i = 0; i < players.size(); i++) {
-        if (players[i].id == id) return i;
+        if (players[i].id == id) return i; // Radome
     }
-    return -1;
+    return -1; // Nerasta
 }
 
 void printById(const vector<Player>& players, int id) {
     int index = findById(players, id);
-    if (index == -1) cout << "Žaidėjas nerastas.\n";
+    if (index == -1) cout << "Zaidejas nerastas.\n";
     else printPlayer(players[index]);
 }
 
-// -------------------------
-//   CREATE – PRIDĖTI ŽAIDĖJĄ
-// -------------------------
+// ---------------------------------------------------------
+//  PRIDETI NAUJA ZAIDEJA
+// ---------------------------------------------------------
 void addPlayer(vector<Player>& players) {
     Player p;
 
+    // Automatinis ID priskyrimas
     p.id = players.empty() ? 1 : players.back().id + 1;
 
-    cout << "Vardas ir pavardė: ";
+    cout << "Vardas ir pavarde: ";
     cin.ignore();
     getline(cin, p.name);
 
     cout << "Komanda: ";
     getline(cin, p.team);
 
-    cout << "Rungtynių skaičius: ";
+    cout << "Rungtyniu skaicius: ";
     cin >> p.games;
 
     cout << "Taskai: ";
@@ -132,19 +141,19 @@ void addPlayer(vector<Player>& players) {
     cout << "Perdavimai: ";
     cin >> p.assists;
 
-    players.push_back(p);
-    saveToFile(players);
+    players.push_back(p);  // Pridedame i sarasa
+    saveToFile(players);   // Issaugome faile
 
-    cout << "Žaidėjas pridėtas!\n";
+    cout << "Zaidejas pridetas!\n";
 }
 
-// -------------------------
-//   UPDATE – REDAGUOTI
-// -------------------------
+// ---------------------------------------------------------
+//  REDAGUOTI ZAIDEJA
+// ---------------------------------------------------------
 void editPlayer(vector<Player>& players, int id) {
     int index = findById(players, id);
     if (index == -1) {
-        cout << "Žaidėjas nerastas.\n";
+        cout << "Zaidejas nerastas.\n";
         return;
     }
 
@@ -157,7 +166,7 @@ void editPlayer(vector<Player>& players, int id) {
     cout << "Nauja komanda (" << p.team << "): ";
     getline(cin, p.team);
 
-    cout << "Rungtynės (" << p.games << "): ";
+    cout << "Rungtynes (" << p.games << "): ";
     cin >> p.games;
 
     cout << "Taskai (" << p.points << "): ";
@@ -170,51 +179,55 @@ void editPlayer(vector<Player>& players, int id) {
     cin >> p.assists;
 
     saveToFile(players);
-    cout << "Žaidėjas atnaujintas!\n";
+    cout << "Zaidejas atnaujintas!\n";
 }
 
-// -------------------------
-//   DELETE – IŠTRINTI
-// -------------------------
+// ---------------------------------------------------------
+//  ISTRINTI ZAIDEJA
+// ---------------------------------------------------------
 void deletePlayer(vector<Player>& players, int id) {
     int index = findById(players, id);
     if (index == -1) {
-        cout << "Žaidėjas nerastas.\n";
+        cout << "Zaidejas nerastas.\n";
         return;
     }
 
-    players.erase(players.begin() + index);
+    players.erase(players.begin() + index); // Pasaliname is saraso
     saveToFile(players);
 
-    cout << "Žaidėjas ištrintas!\n";
+    cout << "Zaidejas istrintas!\n";
 }
 
-// -------------------------
-//   PAPILDOMOS FUNKCIJOS
-// -------------------------
+// ---------------------------------------------------------
+//  PAPILDOMOS FUNKCIJOS
+// ---------------------------------------------------------
 
+// Paieska pagal komanda
 void searchByTeam(const vector<Player>& players, string team) {
     for (const auto& p : players) {
         if (p.team == team) printPlayer(p);
     }
 }
 
+// Rikiavimas pagal taskus
 void sortByPoints(vector<Player>& players) {
     sort(players.begin(), players.end(),
          [](const Player& a, const Player& b) {
              return a.points > b.points;
          });
 
-    cout << "Surikiuota pagal taškus!\n";
+    cout << "Surikiuota pagal taskus!\n";
 }
 
+// Vidutiniai taskai
 void calculateAveragePoints(const vector<Player>& players) {
     for (const auto& p : players) {
         double avg = (double)p.points / p.games;
-        cout << p.name << " – vidurkis: " << avg << "\n";
+        cout << p.name << " - vidurkis: " << avg << "\n";
     }
 }
 
+// Geriausias zaidejas
 void findBestPlayer(const vector<Player>& players) {
     if (players.empty()) return;
 
@@ -223,16 +236,16 @@ void findBestPlayer(const vector<Player>& players) {
                                 return a.points < b.points;
                             });
 
-    cout << "Geriausias žaidėjas pagal taškus:\n";
+    cout << "Geriausias zaidejas pagal taskus:\n";
     printPlayer(*best);
 }
 
-// -------------------------
-//   MENIU
-// -------------------------
+// ---------------------------------------------------------
+//  MENIU SISTEMA
+// ---------------------------------------------------------
 void menu() {
-    vector<Player> players;
-    loadFromFile(players);
+    vector<Player> players; // Visi zaidejai
+    loadFromFile(players);  // Uzpildome is failo
 
     int choice;
 
@@ -282,7 +295,10 @@ void menu() {
     } while (choice != 0);
 }
 
+// ---------------------------------------------------------
+//  MAIN FUNKCIJA
+// ---------------------------------------------------------
 int main() {
-    menu();
+    menu(); // Paleidziame meniu
     return 0;
 }
