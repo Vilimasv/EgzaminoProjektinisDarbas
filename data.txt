@@ -1,0 +1,15 @@
+1;Luka Doncic;Mavericks;70;2364;704;708
+2;Shai Gilgeous-Alexander;Thunder;75;2291;378;450
+3;Giannis Antetokounmpo;Bucks;73;2210;756;488
+4;Jayson Tatum;Celtics;74;2130;590;350
+5;Kevin Durant;Suns;75;2100;450;350
+6;Stephen Curry;Warriors;74;1980;340;420
+7;Anthony Davis;Lakers;76;1900;850;280
+8;Nikola Jokic;Nuggets;79;2050;900;680
+9;LeBron James;Lakers;71;1800;450;550
+10;Devin Booker;Suns;68;1850;300;420
+11;Donovan Mitchell;Cavaliers;55;1500;250;300
+12;Tyrese Haliburton;Pacers;69;1500;250;800
+13;Trae Young;Hawks;54;1600;200;600
+14;Kawhi Leonard;Clippers;68;1700;350;250
+15;Jaylen Brown;Celtics;70;1750;420;250
